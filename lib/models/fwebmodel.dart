@@ -2,15 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../utils/logger.dart';
 
-
-class FWebModel extends InheritedWidget
+class FWebModel extends InheritedWidget with ChangeNotifier 
 {
-  final _state = {};
+  static final _state = {};
 
-  FWebModel({
-    super.key,
-    required super.child,
-  });
+  FWebModel({required super.child});
 
   static FWebModel? maybeOf(BuildContext context) {
     return context.dependOnInheritedWidgetOfExactType<FWebModel>();
@@ -21,13 +17,13 @@ class FWebModel extends InheritedWidget
     assert(result != null, 'The FWebModel is not found in context');
     // Logger.doConsoleLog("The result/model is $result");
     return result!;
-  }
+  } 
 
   @override
   // NOTIFY ON ALL UPDATES REGARDLESS
-  bool updateShouldNotify(FWebModel oldWidget) {
-    Logger.doConsoleLog('Update should notify is called with state as  $_state and \n Old widget state is ${oldWidget._state}');
-    return _state != oldWidget._state;
+  bool updateShouldNotify(Widget oldWidget) {
+    // Logger.doConsoleLog('Update should notify is called with state as  $_state and \n Old widget state is ${oldWidget}');
+    return true; // jsReceiverStub.contentContainer != oldWidget.jsReceiverStub.contentContainer;
   }
 
   void add(Map event)
@@ -44,7 +40,7 @@ class FWebModel extends InheritedWidget
         var dataItemName = event['DATAITEMNAME'];
         var dataItemValue = event['DATAITEMVALUE'];
         _state[dataItemName] = dataItemValue;
-        break;
+        notifyListeners();
       default:
         Logger.doConsoleLog('Event called but not named $eventName');
     }
